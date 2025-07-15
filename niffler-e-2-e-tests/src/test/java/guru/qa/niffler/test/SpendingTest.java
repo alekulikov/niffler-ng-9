@@ -25,12 +25,11 @@ public class SpendingTest {
     final String newDescription = ":)";
 
     Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .fillLoginPage("duck", "12345")
-        .submit()
-        .checkThatPageLoaded()
+        .doLogin("duck", "12345")
+        .checkMainPageBeenLoad()
         .editSpending(spendJson.description())
         .setNewSpendingDescription(newDescription)
         .save()
-        .checkThatTableContainsSpending(newDescription);
+        .checkThatTableContains(newDescription);
   }
 }

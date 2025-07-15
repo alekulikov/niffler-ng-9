@@ -7,6 +7,8 @@ import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @ExtendWith(BrowserExtension.class)
 public class LoginTest {
 
@@ -15,8 +17,14 @@ public class LoginTest {
   @Test
   void mainPageShouldBeDisplayedAfterSuccessLogin() {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .fillLoginPage("duck", "12345")
-        .submit()
-        .checkThatPageLoaded();
+        .doLogin("duck", "12345")
+        .checkMainPageBeenLoad();
+  }
+
+  @Test
+  void userShouldStayOnLoginPageAfterLoginWithBadCredentials() {
+    Selenide.open(CFG.frontUrl(), LoginPage.class)
+        .doLogin("duck", "123456");
+    assertEquals("Login to Niffler", Selenide.title());
   }
 }
