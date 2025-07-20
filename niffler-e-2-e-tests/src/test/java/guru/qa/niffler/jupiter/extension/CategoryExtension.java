@@ -7,6 +7,8 @@ import guru.qa.niffler.model.CategoryJson;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
+import static guru.qa.niffler.jupiter.extension.TestMethodContextExtension.context;
+
 public class CategoryExtension implements BeforeEachCallback, ParameterResolver, AfterTestExecutionCallback {
 
   public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CategoryExtension.class);
@@ -38,16 +40,6 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
   }
 
   @Override
-  public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-    return parameterContext.getParameter().getType().isAssignableFrom(CategoryJson.class);
-  }
-
-  @Override
-  public CategoryJson resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-    return extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId(), CategoryJson.class);
-  }
-
-  @Override
   public void afterTestExecution(ExtensionContext context) throws Exception {
     CategoryJson category = context.getStore(NAMESPACE).get(context.getUniqueId(), CategoryJson.class);
     if (!category.archived()) {
@@ -59,5 +51,21 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
       );
       spendApiClient.updateCategory(archivedCategoryJson);
     }
+  }
+
+  @Override
+  public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+    return parameterContext.getParameter().getType().isAssignableFrom(CategoryJson.class);
+  }
+
+  @Override
+  public CategoryJson resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+    return createdCategory();
+  }
+
+  public static CategoryJson createdCategory() {
+    final ExtensionContext methodContext = context();
+    return methodContext.getStore(NAMESPACE)
+        .get(methodContext.getUniqueId(), CategoryJson.class);
   }
 }
