@@ -13,8 +13,9 @@ public class MainPage {
   private final SelenideElement spendingTable = $("#spendings");
   private final SelenideElement statistics = $("#stat");
   private final ElementsCollection tableRows = spendingTable.$$("tbody tr");
-  private final SelenideElement profileBtn = $("[data-testid=\"PersonIcon\"]");
+  private final SelenideElement profileBtn = $("button[aria-label=\"Menu\"]");
   private final SelenideElement profileLink = $(By.linkText("Profile"));
+  private final SelenideElement friendsLink = $(By.linkText("Friends"));
 
   public EditSpendingPage editSpending(String spendingDescription) {
     tableRows.find(text(spendingDescription))
@@ -39,5 +40,11 @@ public class MainPage {
     profileBtn.click();
     profileLink.click();
     return new ProfilePage();
+  }
+
+  public FriendsPage goFriendsPage() {
+    profileBtn.click();
+    friendsLink.click();
+    return new FriendsPage();
   }
 }
