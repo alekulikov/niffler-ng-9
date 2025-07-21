@@ -32,7 +32,7 @@ public class ProfileTest {
   @User(
       username = "duck",
       categories = @Category(
-          archived = true
+          archived = false
       )
   )
   @Test
