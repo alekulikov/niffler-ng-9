@@ -4,5 +4,5 @@ import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 
 public interface AuthAuthorityDao {
 
-  AuthorityEntity create(AuthorityEntity authority);
+  void create(AuthorityEntity... authority);
 }

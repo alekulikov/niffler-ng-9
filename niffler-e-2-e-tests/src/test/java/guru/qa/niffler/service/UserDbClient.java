@@ -9,7 +9,7 @@ import guru.qa.niffler.data.dao.impl.AuthAuthorityDaoJdbc;
 import guru.qa.niffler.data.dao.impl.AuthUserDaoJdbc;
 import guru.qa.niffler.data.dao.impl.UserDaoJdbc;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
-import guru.qa.niffler.data.entity.auth.UserEntity;
+import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.model.UserAuthJson;
 import guru.qa.niffler.model.UserDataJson;
 
@@ -26,7 +26,7 @@ public class UserDbClient {
     return xaTransaction(
         TRANSACTION_READ_COMMITTED,
         new XaFunction<>(connection -> {
-          UserEntity userEntity = UserEntity.fromJson(userAuth);
+          AuthUserEntity userEntity = AuthUserEntity.fromJson(userAuth);
           AuthorityEntity authorityEntity = new AuthorityEntity();
           authorityEntity.setUser(userEntity);
 
