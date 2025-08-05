@@ -1,7 +1,7 @@
 package guru.qa.niffler.data.dao.impl;
 
 import guru.qa.niffler.data.dao.UserdataUserDao;
-import guru.qa.niffler.data.entity.userdata.UserEntity;
+import guru.qa.niffler.data.entity.userdata.UserdataUserEntity;
 import guru.qa.niffler.data.mapper.UserdataUserEntityRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -10,6 +10,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,7 +23,7 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
   }
 
   @Override
-  public UserEntity create(UserEntity user) {
+  public UserdataUserEntity create(UserdataUserEntity user) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
     KeyHolder kh = new GeneratedKeyHolder();
     jdbcTemplate.update(con -> {
@@ -47,7 +48,7 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
   }
 
   @Override
-  public Optional<UserEntity> findById(UUID id) {
+  public Optional<UserdataUserEntity> findById(UUID id) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
     return Optional.ofNullable(
         jdbcTemplate.queryForObject(
@@ -55,6 +56,33 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
             UserdataUserEntityRowMapper.instance,
             id
         )
+    );
+  }
+
+  @Override
+  public Optional<UserdataUserEntity> findByUsername(String username) {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    return Optional.ofNullable(
+        jdbcTemplate.queryForObject(
+            "SELECT * FROM \"user\" WHERE username = ?",
+            UserdataUserEntityRowMapper.instance,
+            username
+        )
+    );
+  }
+
+  @Override
+  public void delete(UserdataUserEntity user) {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    jdbcTemplate.update("DELETE FROM \"user\" WHERE id = ?", user.getId());
+  }
+
+  @Override
+  public List<UserdataUserEntity> findAll() {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    return jdbcTemplate.query(
+        "SELECT * FROM \"user\"",
+        UserdataUserEntityRowMapper.instance
     );
   }
 }

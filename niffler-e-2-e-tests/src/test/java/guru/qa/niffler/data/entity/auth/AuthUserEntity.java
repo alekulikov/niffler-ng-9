@@ -18,6 +18,13 @@ public class AuthUserEntity implements Serializable {
   private Boolean accountNonLocked;
   private Boolean credentialsNonExpired;
 
+  public AuthUserEntity(UUID id) {
+    this.id = id;
+  }
+
+  public AuthUserEntity() {
+  }
+
   public static AuthUserEntity fromJson(UserAuthJson json) {
     AuthUserEntity userEntity = new AuthUserEntity();
     userEntity.setId(json.id());
