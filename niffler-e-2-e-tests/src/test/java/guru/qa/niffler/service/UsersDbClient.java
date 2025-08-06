@@ -4,11 +4,12 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.Databases.XaFunction;
 import guru.qa.niffler.data.dao.AuthAuthorityDao;
 import guru.qa.niffler.data.dao.AuthUserDao;
-import guru.qa.niffler.data.dao.UserDao;
+import guru.qa.niffler.data.dao.UserdataUserDao;
 import guru.qa.niffler.data.dao.impl.*;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
+import guru.qa.niffler.data.entity.userdata.UserdataUserEntity;
 import guru.qa.niffler.model.UserAuthJson;
 import guru.qa.niffler.model.UserDataJson;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -49,9 +50,9 @@ public class UsersDbClient {
         },
             CFG.authJdbcUrl()),
         new XaFunction<>(connection -> {
-          UserDao userDao = new UserDaoJdbc(connection);
+          UserdataUserDao userDao = new UserdataUserDaoJdbc(connection);
           return UserDataJson.fromEntity(
-              userDao.createUser(guru.qa.niffler.data.entity.userdata.UserEntity.fromJson(userData))
+              userDao.create(UserdataUserEntity.fromJson(userData))
           );
         },
             CFG.userdataJdbcUrl())
@@ -78,7 +79,7 @@ public class UsersDbClient {
 
     return UserDataJson.fromEntity(
         new UserdataUserDaoSpringJdbc(dataSource(CFG.userdataJdbcUrl()))
-            .create(guru.qa.niffler.data.entity.userdata.UserEntity.fromJson(userData))
+            .create(UserdataUserEntity.fromJson(userData))
     );
   }
 }
