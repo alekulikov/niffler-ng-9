@@ -40,13 +40,14 @@ public class JdbcTest {
   }
 
   @Test
-  void xaTxTest() {
+  void userJdbcTest() {
     UsersDbClient userDbClient = new UsersDbClient();
+    String username = randomUsername() + "-jdbc";
 
-    userDbClient.createUser(
+    UserDataJson user = userDbClient.createUser(
         new UserAuthJson(
             null,
-            randomUsername(),
+            username,
             "12345",
             true,
             true,
@@ -55,7 +56,7 @@ public class JdbcTest {
         ),
         new UserDataJson(
             null,
-            "duck",
+            username,
             CurrencyValues.EUR,
             "",
             "",
@@ -64,10 +65,12 @@ public class JdbcTest {
             null
         )
     );
+
+    System.out.println(user);
   }
 
   @Test
-  void springJdbcTest() {
+  void userSpringJdbcTest() {
     UsersDbClient usersDbClient = new UsersDbClient();
     String username = randomUsername() + "-springJdbc";
 
@@ -93,6 +96,42 @@ public class JdbcTest {
         )
     );
     System.out.println(user);
+  }
+
+  @Test
+  void categoryJdbcTest() {
+    SpendDbClient spendDbClient = new SpendDbClient();
+    CategoryJson category = spendDbClient.createCategory(
+        new CategoryJson(
+            null,
+            randomCategoryName() + "-jdbc",
+            "duck",
+            true
+        )
+    );
+    System.out.println(category);
+  }
+
+  @Test
+  void spendJdbcTest() {
+    SpendDbClient spendDbClient = new SpendDbClient();
+    SpendJson spend = spendDbClient.createSpend(
+        new SpendJson(
+            null,
+            new Date(),
+            new CategoryJson(
+                null,
+                "Образование",
+                "duck",
+                false
+            ),
+            CurrencyValues.RUB,
+            1000.0,
+            "spend-name-jdbc",
+            "duck"
+        )
+    );
+    System.out.println(spend);
   }
 
   @Test
