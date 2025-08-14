@@ -9,6 +9,8 @@ import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 import guru.qa.niffler.data.entity.userdata.UserdataUserEntity;
+import guru.qa.niffler.data.repository.AuthUserRepository;
+import guru.qa.niffler.data.repository.impl.AuthUserRepositoryJdbc;
 import guru.qa.niffler.data.tpl.DataSources;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.UserAuthJson;
@@ -32,6 +34,7 @@ public class UsersDbClient {
   private final AuthAuthorityDao authAuthorityDaoJdbc = new AuthAuthorityDaoJdbc();
   private final AuthUserDao authUserDaoJdbc = new AuthUserDaoJdbc();
   private final UserdataUserDao userdataUserDaoJdbc = new UserdataUserDaoJdbc();
+  private final AuthUserRepository authUserRepository = new AuthUserRepositoryJdbc();
 
   private final XaTransactionTemplate xaTxTemplate = new XaTransactionTemplate(
       CFG.authJdbcUrl(),
@@ -117,6 +120,33 @@ public class UsersDbClient {
 
           return UserDataJson.fromEntity(
               userdataUserDaoSpringJdbc.create(UserdataUserEntity.fromJson(user)));
+        }
+    );
+  }
+
+  public UserDataJson createUser(UserDataJson user) {
+    return xaTxTemplate.execute(() -> {
+          AuthUserEntity authUser = new AuthUserEntity();
+          authUser.setUsername(user.username());
+          authUser.setPassword(pe.encode("12345"));
+          authUser.setEnabled(true);
+          authUser.setAccountNonExpired(true);
+          authUser.setAccountNonLocked(true);
+          authUser.setCredentialsNonExpired(true);
+          authUser.setAuthorities(
+              Arrays.stream(Authority.values()).map(
+                  e -> {
+                    AuthorityEntity ae = new AuthorityEntity();
+                    ae.setUser(authUser);
+                    ae.setAuthority(e);
+                    return ae;
+                  }
+              ).toList()
+          );
+          authUserRepository.create(authUser);
+          return UserDataJson.fromEntity(
+              userdataUserDaoSpringJdbc.create(UserdataUserEntity.fromJson(user))
+          );
         }
     );
   }
