@@ -1,5 +1,12 @@
 package guru.qa.niffler.test.web;
 
+import guru.qa.niffler.data.entity.userdata.UserdataUserEntity;
+import guru.qa.niffler.data.repository.AuthUserRepository;
+import guru.qa.niffler.data.repository.UserdataUserRepository;
+import guru.qa.niffler.data.repository.impl.AuthUserRepositoryJdbc;
+import guru.qa.niffler.data.repository.impl.AuthUserRepositorySpringJdbc;
+import guru.qa.niffler.data.repository.impl.UserdataUserRepositoryJdbc;
+import guru.qa.niffler.data.repository.impl.UserdataUserRepositorySpringJdbc;
 import guru.qa.niffler.model.*;
 import guru.qa.niffler.service.SpendDbClient;
 import guru.qa.niffler.service.UsersDbClient;
@@ -195,5 +202,57 @@ public class JdbcTest {
         )
     );
     System.out.println(user);
+  }
+
+  @Test
+  void userRepositoryJdbcTest() {
+    UserdataUserRepository userRepository = new UserdataUserRepositoryJdbc();
+    var users = userRepository.findAll();
+    System.out.println(users.size());
+    users.forEach(user -> System.out.println(user.getId() + " " + user.getUsername()));
+  }
+
+  @Test
+  void friendshipRepositoryJdbcTest() {
+    UserdataUserRepository userRepository = new UserdataUserRepositoryJdbc();
+    var firstUser = userRepository.create(
+        new UserdataUserEntity(randomUsername() + "-bestFriends", CurrencyValues.RUB));
+    var secondUser = userRepository.create(
+        new UserdataUserEntity(randomUsername() + "-bestFriends", CurrencyValues.RUB));
+    userRepository.addFriend(firstUser, secondUser);
+  }
+
+  @Test
+  void authRepositoryJdbcTest() {
+    AuthUserRepository userRepository = new AuthUserRepositoryJdbc();
+    var users = userRepository.findAll();
+    System.out.println(users.size());
+    users.forEach(user -> System.out.println(user.getId() + " " + user.getUsername()));
+  }
+
+  @Test
+  void userRepositorySpringJdbcTest() {
+    UserdataUserRepository userRepository = new UserdataUserRepositorySpringJdbc();
+    var users = userRepository.findAll();
+    System.out.println(users.size());
+    users.forEach(user -> System.out.println(user.getId() + " " + user.getUsername()));
+  }
+
+  @Test
+  void friendshipRepositorySpringJdbcTest() {
+    UserdataUserRepository userRepository = new UserdataUserRepositorySpringJdbc();
+    var firstUser = userRepository.create(
+        new UserdataUserEntity(randomUsername() + "-bestFriends", CurrencyValues.RUB));
+    var secondUser = userRepository.create(
+        new UserdataUserEntity(randomUsername() + "-bestFriends", CurrencyValues.RUB));
+    userRepository.addFriend(firstUser, secondUser);
+  }
+
+  @Test
+  void authRepositorySpringJdbcTest() {
+    AuthUserRepository userRepository = new AuthUserRepositorySpringJdbc();
+    var users = userRepository.findAll();
+    System.out.println(users.size());
+    users.forEach(user -> System.out.println(user.getId() + " " + user.getUsername()));
   }
 }
