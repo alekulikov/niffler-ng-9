@@ -1,4 +1,4 @@
-package guru.qa.niffler.data.repository.impl;
+package guru.qa.niffler.data.repository.impl.springjdbc;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
@@ -81,14 +81,13 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
   }
 
   @Override
-  public void delete(UserdataUserEntity user) {
+  public void remove(UserdataUserEntity user) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
     jdbcTemplate.update("DELETE FROM \"user\" WHERE id = ?", user.getId());
     jdbcTemplate.update("DELETE FROM friendship WHERE requester_id = ? OR addressee_id = ?",
         user.getId(), user.getId());
   }
 
-  @Override
   public List<UserdataUserEntity> findAll() {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
     return jdbcTemplate.query(
@@ -101,7 +100,7 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
   }
 
   @Override
-  public void addIncomeInvitation(UserdataUserEntity requester, UserdataUserEntity addressee) {
+  public void sendInvitation(UserdataUserEntity requester, UserdataUserEntity addressee) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
     jdbcTemplate.update(
         """
@@ -111,11 +110,6 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
         requester.getId(), addressee.getId(),
         FriendshipStatus.PENDING.name(), new Date(System.currentTimeMillis())
     );
-  }
-
-  @Override
-  public void addOutcomeInvitation(UserdataUserEntity requester, UserdataUserEntity addressee) {
-    addIncomeInvitation(requester, addressee);
   }
 
   @Override
@@ -147,5 +141,23 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
           }
         }
     );
+  }
+
+  @Override
+  public UserdataUserEntity update(UserdataUserEntity user) {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
+    jdbcTemplate.update(
+        """
+            UPDATE "user" SET username = ?,
+                            currency = ?,
+                            firstname = ?,
+                            surname = ?,
+                            photo = ?,
+                            photo_small = ?,
+                            full_name = ?
+            WHERE id = ?
+            """, user.getUsername(), user.getCurrency().name(), user.getFirstname(),
+        user.getSurname(), user.getPhoto(), user.getPhotoSmall(), user.getFullname(), user.getId());
+    return user;
   }
 }

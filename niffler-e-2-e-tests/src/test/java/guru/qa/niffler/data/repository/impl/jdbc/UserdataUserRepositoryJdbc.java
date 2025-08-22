@@ -1,4 +1,4 @@
-package guru.qa.niffler.data.repository.impl;
+package guru.qa.niffler.data.repository.impl.jdbc;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
@@ -86,7 +86,7 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
   }
 
   @Override
-  public void delete(UserdataUserEntity user) {
+  public void remove(UserdataUserEntity user) {
     try (PreparedStatement userPs = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         "DELETE FROM \"user\" WHERE id = ?");
          PreparedStatement friendshipPs = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
@@ -102,7 +102,6 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
     }
   }
 
-  @Override
   public List<UserdataUserEntity> findAll() {
     try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         """
@@ -119,7 +118,7 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
   }
 
   @Override
-  public void addIncomeInvitation(UserdataUserEntity requester, UserdataUserEntity addressee) {
+  public void sendInvitation(UserdataUserEntity requester, UserdataUserEntity addressee) {
     try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         """
             INSERT INTO friendship (requester_id, addressee_id, status, created_date)
@@ -134,11 +133,6 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
-  }
-
-  @Override
-  public void addOutcomeInvitation(UserdataUserEntity requester, UserdataUserEntity addressee) {
-    addIncomeInvitation(requester, addressee);
   }
 
   @Override
@@ -162,6 +156,35 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
       ps.setDate(4, new Date(System.currentTimeMillis()));
       ps.executeUpdate();
 
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public UserdataUserEntity update(UserdataUserEntity user) {
+    try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
+        """
+            UPDATE "user" SET username = ?,
+                            currency = ?,
+                            firstname = ?,
+                            surname = ?,
+                            photo = ?,
+                            photo_small = ?,
+                            full_name = ?
+            WHERE id = ?
+            """
+    )) {
+      ps.setString(1, user.getUsername());
+      ps.setString(2, user.getCurrency().name());
+      ps.setString(3, user.getFirstname());
+      ps.setString(4, user.getSurname());
+      ps.setBytes(5, user.getPhoto());
+      ps.setBytes(6, user.getPhotoSmall());
+      ps.setString(7, user.getFullname());
+      ps.setObject(8, user.getId());
+      ps.executeUpdate();
+      return user;
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }

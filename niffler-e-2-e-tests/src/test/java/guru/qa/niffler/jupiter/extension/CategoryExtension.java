@@ -2,7 +2,8 @@ package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
-import guru.qa.niffler.service.SpendDbClient;
+import guru.qa.niffler.service.SpendClient;
+import guru.qa.niffler.service.impl.SpendDbClient;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
@@ -15,7 +16,7 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
 
   public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CategoryExtension.class);
 
-  private final SpendDbClient spendDbClient = new SpendDbClient();
+  private final SpendClient spendClient = new SpendDbClient();
 
   @Override
   public void beforeEach(ExtensionContext context) throws Exception {
@@ -28,7 +29,7 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
                 anno.username(),
                 false
             );
-            CategoryJson created = spendDbClient.createCategory(categoryJson);
+            CategoryJson created = spendClient.createCategory(categoryJson);
             if (anno.categories()[0].archived()) {
               CategoryJson archivedCategoryJson = new CategoryJson(
                   created.id(),
@@ -36,7 +37,7 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
                   created.username(),
                   true
               );
-              created = spendDbClient.updateCategory(archivedCategoryJson);
+              created = spendClient.updateCategory(archivedCategoryJson);
             }
             context.getStore(NAMESPACE).put(context.getUniqueId(), created);
           }
@@ -54,7 +55,7 @@ public class CategoryExtension implements BeforeEachCallback, ParameterResolver,
                 category.username(),
                 true
             );
-            spendDbClient.updateCategory(archivedCategoryJson);
+            spendClient.updateCategory(archivedCategoryJson);
           }
         });
   }
