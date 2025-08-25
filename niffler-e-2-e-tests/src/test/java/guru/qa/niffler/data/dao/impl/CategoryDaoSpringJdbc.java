@@ -44,21 +44,21 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
   @Override
   public Optional<CategoryEntity> findCategoryById(UUID id) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.spendJdbcUrl()));
-    return Optional.ofNullable(jdbcTemplate.queryForObject(
+    return jdbcTemplate.query(
         "SELECT * FROM category WHERE id = ?",
         CategoryEntityRowMapper.instance,
         id
-    ));
+    ).stream().findFirst();
   }
 
   @Override
   public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String categoryName) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.spendJdbcUrl()));
-    return Optional.ofNullable(jdbcTemplate.queryForObject(
+    return jdbcTemplate.query(
         "SELECT * FROM category WHERE username = ? AND name = ?",
         CategoryEntityRowMapper.instance,
         username, categoryName
-    ));
+    ).stream().findFirst();
   }
 
   @Override
