@@ -1,5 +1,6 @@
 package guru.qa.niffler.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import guru.qa.niffler.data.entity.userdata.UserdataUserEntity;
 
@@ -21,9 +22,13 @@ public record UserDataJson(
     @JsonProperty("photo")
     byte[] photo,
     @JsonProperty("photoSmall")
-    byte[] photoSmall) {
+    byte[] photoSmall,
+    @JsonProperty("friendshipStatus")
+    FriendshipStatus friendshipStatus,
+    @JsonIgnore
+    TestData testData) {
 
-  public static UserDataJson fromEntity(UserdataUserEntity entity) {
+  public static UserDataJson fromEntity(UserdataUserEntity entity, FriendshipStatus friendshipStatus) {
     return new UserDataJson(
         entity.getId(),
         entity.getUsername(),
@@ -32,7 +37,46 @@ public record UserDataJson(
         entity.getSurname(),
         entity.getFullname(),
         entity.getPhoto(),
-        entity.getPhotoSmall()
+        entity.getPhotoSmall(),
+        friendshipStatus,
+        new TestData(null)
+    );
+  }
+
+  public UserDataJson withTestData(TestData testData) {
+    return new UserDataJson(
+        id,
+        username,
+        currency,
+        firstname,
+        surname,
+        fullname,
+        photo,
+        photoSmall,
+        friendshipStatus,
+        testData
+    );
+  }
+
+  public UserDataJson withPassword(String password) {
+    return new UserDataJson(
+        id,
+        username,
+        currency,
+        firstname,
+        surname,
+        fullname,
+        photo,
+        photoSmall,
+        friendshipStatus,
+        new TestData(
+            password,
+            testData.friends(),
+            testData.incomeInvitations(),
+            testData.outcomeInvitations(),
+            testData.categories(),
+            testData.spendings()
+        )
     );
   }
 }

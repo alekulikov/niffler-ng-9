@@ -25,13 +25,12 @@ public class SpendingTest {
       )
   )
   @Test
-  void mainPageShouldBeDisplayedAfterSuccessLogin(SpendJson spendJson) {
+  void mainPageShouldBeDisplayedAfterSuccessLogin(SpendJson... spendings) {
     final String newDescription = ":)";
 
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .doLogin("duck", "12345")
-        .checkMainPageBeenLoad()
-        .editSpending(spendJson.description())
+        .editSpending(spendings[0].description())
         .setNewSpendingDescription(newDescription)
         .save()
         .checkThatTableContains(newDescription);

@@ -3,9 +3,9 @@ package guru.qa.niffler.data.repository.impl.springjdbc;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.entity.userdata.FriendshipStatus;
 import guru.qa.niffler.data.entity.userdata.UserdataUserEntity;
+import guru.qa.niffler.data.jdbc.DataSources;
 import guru.qa.niffler.data.mapper.UserdataUserEntityResultSetExtractor;
 import guru.qa.niffler.data.repository.UserdataUserRepository;
-import guru.qa.niffler.data.tpl.DataSources;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -16,6 +16,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -51,33 +52,29 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
   @Override
   public Optional<UserdataUserEntity> findById(UUID id) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
-    return Optional.ofNullable(
-        jdbcTemplate.query(
-            """
-                SELECT * FROM "user" u left join friendship f
-                    ON u.id = f.requester_id or (u.id = f.addressee_id and status = 'PENDING')
-                WHERE u.id = ?
-                """,
-            UserdataUserEntityResultSetExtractor.instance,
-            id
-        ).getFirst()
-    );
+    return Objects.requireNonNull(jdbcTemplate.query(
+        """
+            SELECT * FROM "user" u left join friendship f
+                ON u.id = f.requester_id or (u.id = f.addressee_id and status = 'PENDING')
+            WHERE u.id = ?
+            """,
+        UserdataUserEntityResultSetExtractor.instance,
+        id
+    )).stream().findFirst();
   }
 
   @Override
   public Optional<UserdataUserEntity> findByUsername(String username) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
-    return Optional.ofNullable(
-        jdbcTemplate.query(
-            """
-                SELECT * FROM "user" u left join friendship f
-                    ON u.id = f.requester_id or (u.id = f.addressee_id and status = 'PENDING')
-                WHERE u.username = ?
-                """,
-            UserdataUserEntityResultSetExtractor.instance,
-            username
-        ).getFirst()
-    );
+    return Objects.requireNonNull(jdbcTemplate.query(
+        """
+            SELECT * FROM "user" u left join friendship f
+                ON u.id = f.requester_id or (u.id = f.addressee_id and status = 'PENDING')
+            WHERE u.username = ?
+            """,
+        UserdataUserEntityResultSetExtractor.instance,
+        username
+    )).stream().findFirst();
   }
 
   @Override

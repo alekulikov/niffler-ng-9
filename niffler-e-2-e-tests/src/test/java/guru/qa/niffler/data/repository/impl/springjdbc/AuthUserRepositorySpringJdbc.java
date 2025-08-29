@@ -2,9 +2,9 @@ package guru.qa.niffler.data.repository.impl.springjdbc;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
+import guru.qa.niffler.data.jdbc.DataSources;
 import guru.qa.niffler.data.mapper.AuthUserEntityResultSetExtractor;
 import guru.qa.niffler.data.repository.AuthUserRepository;
-import guru.qa.niffler.data.tpl.DataSources;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -66,49 +67,45 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
   @Override
   public Optional<AuthUserEntity> findByUsername(String username) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
-    return Optional.ofNullable(
-        jdbcTemplate.query(
-            """
-                 SELECT a.id as authority_id,
-                        authority,
-                        user_id as id,
-                        username,
-                        u.password,
-                        u.enabled,
-                        u.account_non_expired,
-                        u.account_non_locked,
-                        u.credentials_non_expired
-                FROM "user" u join public.authority a on u.id = a.user_id
-                WHERE u.username = ?
-                """,
-            AuthUserEntityResultSetExtractor.instance,
-            username
-        ).getFirst()
-    );
+    return Objects.requireNonNull(jdbcTemplate.query(
+        """
+             SELECT a.id as authority_id,
+                    authority,
+                    user_id as id,
+                    username,
+                    u.password,
+                    u.enabled,
+                    u.account_non_expired,
+                    u.account_non_locked,
+                    u.credentials_non_expired
+            FROM "user" u join public.authority a on u.id = a.user_id
+            WHERE u.username = ?
+            """,
+        AuthUserEntityResultSetExtractor.instance,
+        username
+    )).stream().findFirst();
   }
 
   @Override
   public Optional<AuthUserEntity> findById(UUID id) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
-    return Optional.ofNullable(
-        jdbcTemplate.query(
-            """
-                 SELECT a.id as authority_id,
-                        authority,
-                        user_id as id,
-                        username,
-                        u.password,
-                        u.enabled,
-                        u.account_non_expired,
-                        u.account_non_locked,
-                        u.credentials_non_expired
-                FROM "user" u join public.authority a on u.id = a.user_id
-                WHERE u.id = ?
-                """,
-            AuthUserEntityResultSetExtractor.instance,
-            id
-        ).getFirst()
-    );
+    return Objects.requireNonNull(jdbcTemplate.query(
+        """
+             SELECT a.id as authority_id,
+                    authority,
+                    user_id as id,
+                    username,
+                    u.password,
+                    u.enabled,
+                    u.account_non_expired,
+                    u.account_non_locked,
+                    u.credentials_non_expired
+            FROM "user" u join public.authority a on u.id = a.user_id
+            WHERE u.id = ?
+            """,
+        AuthUserEntityResultSetExtractor.instance,
+        id
+    )).stream().findFirst();
   }
 
   public List<AuthUserEntity> findAll() {

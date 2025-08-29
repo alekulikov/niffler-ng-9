@@ -1,4 +1,4 @@
-package guru.qa.niffler.data.dao.impl;
+package guru.qa.niffler.data.dao.impl.jdbc;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.AuthAuthorityDao;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static guru.qa.niffler.data.tpl.Connections.holder;
+import static guru.qa.niffler.data.jdbc.Connections.holder;
 
 public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
 
@@ -45,7 +45,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
         while (rs.next()) {
           AuthorityEntity ae = new AuthorityEntity();
           ae.setId(rs.getObject("id", UUID.class));
-          ae.setUser( new AuthUserEntity(rs.getObject("user_id", UUID.class)));
+          ae.setUser(new AuthUserEntity(rs.getObject("user_id", UUID.class)));
           ae.setAuthority(Authority.valueOf(rs.getString("authority")));
           authorities.add(ae);
         }

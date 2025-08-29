@@ -2,8 +2,8 @@ package guru.qa.niffler.data.repository.impl.springjdbc;
 
 import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.dao.SpendDao;
-import guru.qa.niffler.data.dao.impl.CategoryDaoSpringJdbc;
-import guru.qa.niffler.data.dao.impl.SpendDaoSpringJdbc;
+import guru.qa.niffler.data.dao.impl.springjdbc.CategoryDaoSpringJdbc;
+import guru.qa.niffler.data.dao.impl.springjdbc.SpendDaoSpringJdbc;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.repository.SpendRepository;
