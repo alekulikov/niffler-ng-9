@@ -1,20 +1,12 @@
 package guru.qa.niffler.data.entity.auth;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import guru.qa.niffler.model.AuthorityJson;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
@@ -53,7 +45,8 @@ public class AuthorityEntity implements Serializable {
     return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
   }
 
-  public static AuthorityEntity fromJson(AuthorityJson json) {
+  @Nonnull
+  public static AuthorityEntity fromJson(@Nonnull AuthorityJson json) {
     AuthorityEntity entity = new AuthorityEntity();
     entity.setId(json.id());
     entity.setAuthority(json.authority());

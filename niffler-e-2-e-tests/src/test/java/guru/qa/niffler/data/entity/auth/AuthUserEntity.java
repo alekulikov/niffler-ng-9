@@ -1,18 +1,12 @@
 package guru.qa.niffler.data.entity.auth;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import guru.qa.niffler.model.UserAuthJson;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +53,7 @@ public class AuthUserEntity implements Serializable {
   public AuthUserEntity() {
   }
 
-  public void addAuthorities(AuthorityEntity... authorities) {
+  public void addAuthorities(@Nonnull AuthorityEntity... authorities) {
     for (AuthorityEntity authority : authorities) {
       this.authorities.add(authority);
       authority.setUser(this);
@@ -87,7 +81,8 @@ public class AuthUserEntity implements Serializable {
     return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
   }
 
-  public static AuthUserEntity fromJson(UserAuthJson json) {
+  @Nonnull
+  public static AuthUserEntity fromJson(@Nonnull UserAuthJson json) {
     AuthUserEntity userEntity = new AuthUserEntity();
     userEntity.setId(json.id());
     userEntity.setUsername(json.username());

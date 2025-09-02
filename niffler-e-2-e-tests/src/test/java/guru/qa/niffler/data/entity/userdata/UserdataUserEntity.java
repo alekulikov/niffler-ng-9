@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
 
+import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Stream;
@@ -109,7 +110,8 @@ public class UserdataUserEntity implements Serializable {
     }
   }
 
-  public static UserdataUserEntity fromJson(UserDataJson json) {
+  @Nonnull
+  public static UserdataUserEntity fromJson(@Nonnull UserDataJson json) {
     UserdataUserEntity ue = new UserdataUserEntity();
     ue.setId(json.id());
     ue.setUsername(json.username());

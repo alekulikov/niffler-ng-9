@@ -1,11 +1,16 @@
 package guru.qa.niffler.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import guru.qa.niffler.data.entity.userdata.UserdataUserEntity;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record UserDataJson(
     @JsonProperty("id")
     UUID id,
@@ -28,6 +33,7 @@ public record UserDataJson(
     @JsonIgnore
     TestData testData) {
 
+  @Nonnull
   public static UserDataJson fromEntity(UserdataUserEntity entity, FriendshipStatus friendshipStatus) {
     return new UserDataJson(
         entity.getId(),
@@ -43,6 +49,7 @@ public record UserDataJson(
     );
   }
 
+  @Nonnull
   public UserDataJson withTestData(TestData testData) {
     return new UserDataJson(
         id,
@@ -58,6 +65,7 @@ public record UserDataJson(
     );
   }
 
+  @Nonnull
   public UserDataJson withPassword(String password) {
     return new UserDataJson(
         id,
