@@ -11,6 +11,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -20,11 +22,13 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository {
 
   private static final Config CFG = Config.getInstance();
 
   @Override
+  @Nonnull
   public UserdataUserEntity create(UserdataUserEntity user) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
     KeyHolder kh = new GeneratedKeyHolder();
@@ -50,6 +54,7 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
   }
 
   @Override
+  @Nonnull
   public Optional<UserdataUserEntity> findById(UUID id) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
     return Objects.requireNonNull(jdbcTemplate.query(
@@ -64,6 +69,7 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
   }
 
   @Override
+  @Nonnull
   public Optional<UserdataUserEntity> findByUsername(String username) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
     return Objects.requireNonNull(jdbcTemplate.query(
@@ -85,15 +91,16 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
         user.getId(), user.getId());
   }
 
+  @Nonnull
   public List<UserdataUserEntity> findAll() {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
-    return jdbcTemplate.query(
+    return Objects.requireNonNull(jdbcTemplate.query(
         """
             SELECT * FROM "user" u left join friendship f
                 ON u.id = f.requester_id or (u.id = f.addressee_id and status = 'PENDING')
             """,
         UserdataUserEntityResultSetExtractor.instance
-    );
+    ));
   }
 
   @Override
@@ -141,6 +148,7 @@ public class UserdataUserRepositorySpringJdbc implements UserdataUserRepository 
   }
 
   @Override
+  @Nonnull
   public UserdataUserEntity update(UserdataUserEntity user) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
     jdbcTemplate.update(

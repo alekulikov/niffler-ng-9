@@ -5,10 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 
 import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.UUID;
 
-@ParametersAreNonnullByDefault
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record CategoryJson(
     @JsonProperty("id")
@@ -21,7 +19,7 @@ public record CategoryJson(
     boolean archived) {
 
   @Nonnull
-  public static CategoryJson fromEntity(CategoryEntity entity) {
+  public static CategoryJson fromEntity(@Nonnull CategoryEntity entity) {
     return new CategoryJson(
         entity.getId(),
         entity.getName(),

@@ -35,6 +35,7 @@ public class AuthUserRepositoryHibernate implements AuthUserRepository {
     return entityManager.merge(user);
   }
 
+  @Nonnull
   @Override
   public Optional<AuthUserEntity> findById(UUID id) {
     return Optional.ofNullable(

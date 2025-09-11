@@ -4,6 +4,8 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.UserdataUserDao;
 import guru.qa.niffler.data.entity.userdata.UserdataUserEntity;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,11 +17,14 @@ import java.util.UUID;
 
 import static guru.qa.niffler.data.jdbc.Connections.holder;
 
+@ParametersAreNonnullByDefault
+@SuppressWarnings("resource")
 public class UserdataUserDaoJdbc implements UserdataUserDao {
 
   private static final Config CFG = Config.getInstance();
 
   @Override
+  @Nonnull
   public UserdataUserEntity create(UserdataUserEntity user) {
     try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         """
@@ -50,6 +55,7 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
   }
 
   @Override
+  @Nonnull
   public Optional<UserdataUserEntity> findById(UUID id) {
     try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement("SELECT * FROM \"user\" WHERE id = ?")) {
       ps.setObject(1, id);
@@ -74,6 +80,7 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
   }
 
   @Override
+  @Nonnull
   public Optional<UserdataUserEntity> findByUsername(String username) {
     try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement("SELECT * FROM \"user\" WHERE username = ?")) {
       ps.setString(1, username);
@@ -108,6 +115,7 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
   }
 
   @Override
+  @Nonnull
   public List<UserdataUserEntity> findAll() {
     try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement("SELECT * FROM \"user\"")) {
       ps.execute();

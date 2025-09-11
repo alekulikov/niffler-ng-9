@@ -44,14 +44,12 @@ public class BrowserExtension implements
 
   @Override
   public void handleBeforeEachMethodExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
-    doScreenshot();
-    throw throwable;
+    handleTestExecutionException(context, throwable);
   }
 
   @Override
   public void handleAfterEachMethodExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
-    doScreenshot();
-    throw throwable;
+    handleTestExecutionException(context, throwable);
   }
 
   private static void doScreenshot() {

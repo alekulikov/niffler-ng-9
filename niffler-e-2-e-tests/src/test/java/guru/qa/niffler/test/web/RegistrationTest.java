@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import static guru.qa.niffler.utils.RandomDataUtils.randomUsername;
 
 @WebTest
-public class RegistrationTest {
+class RegistrationTest {
 
   private static final Config CFG = Config.getInstance();
 

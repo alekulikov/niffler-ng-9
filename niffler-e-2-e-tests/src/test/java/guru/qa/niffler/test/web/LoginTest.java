@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @WebTest
-public class LoginTest {
+class LoginTest {
 
   private static final Config CFG = Config.getInstance();
 

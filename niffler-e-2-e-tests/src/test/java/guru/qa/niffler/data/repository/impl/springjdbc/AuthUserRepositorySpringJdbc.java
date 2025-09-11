@@ -10,6 +10,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -18,10 +20,12 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
 
   private static final Config CFG = Config.getInstance();
 
+  @Nonnull
   @Override
   public AuthUserEntity create(AuthUserEntity user) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
@@ -64,6 +68,7 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
     return user;
   }
 
+  @Nonnull
   @Override
   public Optional<AuthUserEntity> findByUsername(String username) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
@@ -86,6 +91,7 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
     )).stream().findFirst();
   }
 
+  @Nonnull
   @Override
   public Optional<AuthUserEntity> findById(UUID id) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
@@ -108,9 +114,10 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
     )).stream().findFirst();
   }
 
+  @Nonnull
   public List<AuthUserEntity> findAll() {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
-    return jdbcTemplate.query(
+    return Objects.requireNonNull(jdbcTemplate.query(
         """
              SELECT a.id as authority_id,
                     authority,
@@ -124,9 +131,10 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
             FROM "user" u join public.authority a on u.id = a.user_id
             """,
         AuthUserEntityResultSetExtractor.instance
-    );
+    ));
   }
 
+  @Nonnull
   @Override
   public AuthUserEntity update(AuthUserEntity user) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));

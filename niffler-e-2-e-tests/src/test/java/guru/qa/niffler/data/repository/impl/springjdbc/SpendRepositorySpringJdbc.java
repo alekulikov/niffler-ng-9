@@ -8,15 +8,19 @@ import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.repository.SpendRepository;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class SpendRepositorySpringJdbc implements SpendRepository {
 
   private final SpendDao spendDao = new SpendDaoSpringJdbc();
   private final CategoryDao categoryDao = new CategoryDaoSpringJdbc();
 
   @Override
+  @Nonnull
   public SpendEntity create(SpendEntity spend) {
     if (spend.getCategory().getId() == null) {
       categoryDao.findCategoryByUsernameAndCategoryName(
@@ -30,11 +34,13 @@ public class SpendRepositorySpringJdbc implements SpendRepository {
   }
 
   @Override
+  @Nonnull
   public SpendEntity update(SpendEntity spend) {
     return spendDao.update(spend);
   }
 
   @Override
+  @Nonnull
   public CategoryEntity createCategory(CategoryEntity category) {
     return categoryDao.findCategoryByUsernameAndCategoryName(
         category.getUsername(), category.getName()
@@ -42,21 +48,25 @@ public class SpendRepositorySpringJdbc implements SpendRepository {
   }
 
   @Override
+  @Nonnull
   public Optional<SpendEntity> findById(UUID id) {
     return spendDao.findSpendById(id);
   }
 
   @Override
+  @Nonnull
   public Optional<SpendEntity> findByUsernameAndSpendDescription(String username, String description) {
     return spendDao.findByUsernameAndSpendDescription(username, description);
   }
 
   @Override
+  @Nonnull
   public Optional<CategoryEntity> findCategoryById(UUID id) {
     return categoryDao.findCategoryById(id);
   }
 
   @Override
+  @Nonnull
   public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String name) {
     return categoryDao.findCategoryByUsernameAndCategoryName(username, name);
   }
@@ -72,6 +82,7 @@ public class SpendRepositorySpringJdbc implements SpendRepository {
   }
 
   @Override
+  @Nonnull
   public CategoryEntity updateCategory(CategoryEntity category) {
     return categoryDao.updateCategory(category);
   }
