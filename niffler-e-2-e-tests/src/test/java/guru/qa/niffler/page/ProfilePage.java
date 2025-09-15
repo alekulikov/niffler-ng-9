@@ -2,9 +2,11 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Condition.visible;
+import javax.annotation.Nonnull;
+
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
@@ -12,14 +14,36 @@ public class ProfilePage {
 
   private final SelenideElement archiveCategoriesToggle = $("input.MuiSwitch-input");
   private final ElementsCollection categories = $$(".MuiChip-label");
+  private final SelenideElement nameInput = $("input[name='name']");
+  private final SelenideElement saveBtn = $("button[type='submit']");
 
+  @Step("Switch archived categories toggle")
+  @Nonnull
   public ProfilePage switchArchivedCategories() {
     archiveCategoriesToggle.click();
     return this;
   }
 
+  @Step("Check that category '{categoryName}' exist")
+  @Nonnull
   public ProfilePage checkCategoryExist(String categoryName) {
     categories.find(text(categoryName)).shouldBe(visible);
+    return this;
+  }
+
+  @Step("Set name: '{name}'")
+  @Nonnull
+  public ProfilePage setName(String name) {
+    nameInput.clear();
+    nameInput.setValue(name).pressEnter();
+    saveBtn.click();
+    return this;
+  }
+
+  @Step("Check that name equal '{name}'")
+  @Nonnull
+  public ProfilePage checkName(String name) {
+    nameInput.shouldHave(value(name));
     return this;
   }
 }

@@ -5,10 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 
 import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.UUID;
 
-@ParametersAreNonnullByDefault
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record UserAuthJson(
     @JsonProperty("id")
@@ -27,7 +25,7 @@ public record UserAuthJson(
     Boolean credentialsNonExpired) {
 
   @Nonnull
-  public static UserAuthJson fromEntity(AuthUserEntity entity) {
+  public static UserAuthJson fromEntity(@Nonnull AuthUserEntity entity) {
     return new UserAuthJson(
         entity.getId(),
         entity.getUsername(),

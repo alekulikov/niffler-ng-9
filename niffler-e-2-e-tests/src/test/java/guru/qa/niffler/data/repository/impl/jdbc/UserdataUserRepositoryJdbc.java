@@ -6,6 +6,8 @@ import guru.qa.niffler.data.entity.userdata.UserdataUserEntity;
 import guru.qa.niffler.data.mapper.UserdataUserEntityResultSetExtractor;
 import guru.qa.niffler.data.repository.UserdataUserRepository;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.*;
 import java.util.List;
 import java.util.Optional;
@@ -13,11 +15,14 @@ import java.util.UUID;
 
 import static guru.qa.niffler.data.jdbc.Connections.holder;
 
+@ParametersAreNonnullByDefault
+@SuppressWarnings("resource")
 public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
 
   private static final Config CFG = Config.getInstance();
 
   @Override
+  @Nonnull
   public UserdataUserEntity create(UserdataUserEntity user) {
     try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         """
@@ -48,6 +53,7 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
   }
 
   @Override
+  @Nonnull
   public Optional<UserdataUserEntity> findById(UUID id) {
     try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         """
@@ -67,6 +73,7 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
   }
 
   @Override
+  @Nonnull
   public Optional<UserdataUserEntity> findByUsername(String username) {
     try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         """
@@ -102,6 +109,7 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
     }
   }
 
+  @Nonnull
   public List<UserdataUserEntity> findAll() {
     try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         """
@@ -162,6 +170,7 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
   }
 
   @Override
+  @Nonnull
   public UserdataUserEntity update(UserdataUserEntity user) {
     try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
         """

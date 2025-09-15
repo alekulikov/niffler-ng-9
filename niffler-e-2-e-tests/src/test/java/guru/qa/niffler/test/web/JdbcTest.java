@@ -24,7 +24,7 @@ import java.util.Date;
 import static guru.qa.niffler.utils.RandomDataUtils.randomCategoryName;
 import static guru.qa.niffler.utils.RandomDataUtils.randomUsername;
 
-public class JdbcTest {
+class JdbcTest {
 
   @Test
   void userRepositoryJdbcTest() {

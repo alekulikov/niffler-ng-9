@@ -9,7 +9,7 @@ import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.Test;
 
 @WebTest
-public class FriendsTest {
+class FriendsTest {
 
   private static final Config CFG = Config.getInstance();
 
@@ -20,6 +20,7 @@ public class FriendsTest {
   void friendShouldBePresentInFriendsTable(UserDataJson user) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .doLogin(user.username(), user.testData().password())
+        .getHeader()
         .goFriendsPage()
         .checkThatFriendsContains(user.testData().friends()
             .stream()
@@ -33,6 +34,7 @@ public class FriendsTest {
   void friendsTableShouldBeEmptyForNewUser(UserDataJson user) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .doLogin(user.username(), user.testData().password())
+        .getHeader()
         .goFriendsPage()
         .checkThatFriendsEmpty();
   }
@@ -44,6 +46,7 @@ public class FriendsTest {
   void incomeInvitationBePresentInFriendsTable(UserDataJson user) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .doLogin(user.username(), user.testData().password())
+        .getHeader()
         .goFriendsPage()
         .checkThatIncomeRequestsContains(user.testData().incomeInvitations()
             .stream()
@@ -59,12 +62,42 @@ public class FriendsTest {
   void outcomeInvitationBePresentInAllPeoplesTable(UserDataJson user) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .doLogin(user.username(), user.testData().password())
-        .goFriendsPage()
-        .selectAllPeopleTab()
+        .getHeader()
+        .goAllPeoplesPage()
         .checkThatOutcomeRequestsContains(user.testData().outcomeInvitations()
             .stream()
             .map(UserDataJson::username)
             .toArray(String[]::new)
         );
+  }
+
+  @User(incomeInvitations = 1)
+  @Test
+  void incomeInvitationMayBeAccepted(UserDataJson user) {
+    final String userToAccept = user.testData().incomeInvitations().getFirst().username();
+
+    Selenide.open(CFG.frontUrl(), LoginPage.class)
+        .doLogin(user.username(), user.testData().password())
+        .checkMainPageBeenLoad()
+        .getHeader()
+        .goFriendsPage()
+        .acceptFriendInvitationFromUser(userToAccept)
+        .checkThatInvitationsEmpty()
+        .checkThatFriendsContains(userToAccept);
+  }
+
+  @User(incomeInvitations = 1)
+  @Test
+  void incomeInvitationMayBeDeclined(UserDataJson user) {
+    final String userToDecline = user.testData().incomeInvitations().getFirst().username();
+
+    Selenide.open(CFG.frontUrl(), LoginPage.class)
+        .doLogin(user.username(), user.testData().password())
+        .checkMainPageBeenLoad()
+        .getHeader()
+        .goFriendsPage()
+        .declineFriendInvitationFromUser(userToDecline)
+        .checkThatInvitationsEmpty()
+        .checkThatFriendsEmpty();
   }
 }

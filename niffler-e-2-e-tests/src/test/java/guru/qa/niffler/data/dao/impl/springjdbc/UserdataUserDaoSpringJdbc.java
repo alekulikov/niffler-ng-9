@@ -10,17 +10,21 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
 
   private static final Config CFG = Config.getInstance();
 
   @Override
+  @Nonnull
   public UserdataUserEntity create(UserdataUserEntity user) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
     KeyHolder kh = new GeneratedKeyHolder();
@@ -46,6 +50,7 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
   }
 
   @Override
+  @Nonnull
   public Optional<UserdataUserEntity> findById(UUID id) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
     try {
@@ -61,6 +66,7 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
   }
 
   @Override
+  @Nonnull
   public Optional<UserdataUserEntity> findByUsername(String username) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
     try {
@@ -83,6 +89,7 @@ public class UserdataUserDaoSpringJdbc implements UserdataUserDao {
   }
 
   @Override
+  @Nonnull
   public List<UserdataUserEntity> findAll() {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
     return jdbcTemplate.query(
