@@ -5,26 +5,30 @@ import guru.qa.niffler.data.repository.AuthUserRepository;
 import guru.qa.niffler.data.repository.SpendRepository;
 import guru.qa.niffler.data.repository.UserdataUserRepository;
 import guru.qa.niffler.data.repository.impl.jdbc.AuthUserRepositoryJdbc;
-import guru.qa.niffler.data.repository.impl.jdbc.UserdataUserRepositoryJdbc;
-import guru.qa.niffler.data.repository.impl.springjdbc.UserdataUserRepositorySpringJdbc;
 import guru.qa.niffler.data.repository.impl.jdbc.SpendRepositoryJdbc;
+import guru.qa.niffler.data.repository.impl.jdbc.UserdataUserRepositoryJdbc;
 import guru.qa.niffler.data.repository.impl.springjdbc.AuthUserRepositorySpringJdbc;
 import guru.qa.niffler.data.repository.impl.springjdbc.SpendRepositorySpringJdbc;
+import guru.qa.niffler.data.repository.impl.springjdbc.UserdataUserRepositorySpringJdbc;
+import guru.qa.niffler.jupiter.extension.ClientResolver;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.service.SpendClient;
 import guru.qa.niffler.service.UsersClient;
-import guru.qa.niffler.service.impl.SpendDbClient;
-import guru.qa.niffler.service.impl.UsersDbClient;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.Date;
 
 import static guru.qa.niffler.utils.RandomDataUtils.randomCategoryName;
 import static guru.qa.niffler.utils.RandomDataUtils.randomUsername;
 
+@ExtendWith(ClientResolver.class)
 class JdbcTest {
+
+  private SpendClient spendClient;
+  private UsersClient usersClient;
 
   @Test
   void userRepositoryJdbcTest() {
@@ -90,7 +94,6 @@ class JdbcTest {
 
   @Test
   void createUserDbClientTrxTest() {
-    UsersClient usersClient = new UsersDbClient();
     var user = usersClient.createUser(randomUsername(), "12345");
     usersClient.createFriends(user, 3);
     System.out.println(user.username());
@@ -98,7 +101,6 @@ class JdbcTest {
 
   @Test
   void createSpendDbClientTrxTest() {
-    SpendClient spendClient = new SpendDbClient();
     var spend = new SpendJson(
         null,
         new Date(),
