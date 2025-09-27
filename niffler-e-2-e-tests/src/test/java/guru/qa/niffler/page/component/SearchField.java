@@ -1,7 +1,6 @@
 package guru.qa.niffler.page.component;
 
 import com.codeborne.selenide.SelenideElement;
-import io.qameta.allure.Step;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -11,22 +10,25 @@ import static com.codeborne.selenide.Condition.not;
 import static com.codeborne.selenide.Selenide.$;
 
 @ParametersAreNonnullByDefault
-public class SearchField {
+public class SearchField extends BaseComponent {
 
-  private final SelenideElement searchInputField = $("input[placeholder='Search']");
   private final SelenideElement clearSearchBtn = $("#input-clear");
+
+  public SearchField() {
+    super($("input[placeholder='Search']"));
+  }
 
   @Nonnull
   public SearchField search(String query) {
-    clear().searchInputField.setValue(query).pressEnter();
+    clear().self.setValue(query).pressEnter();
     return this;
   }
 
   @Nonnull
   public SearchField clear() {
-    if (searchInputField.is(not(empty))) {
+    if (self.is(not(empty))) {
       clearSearchBtn.click();
-      searchInputField.should(empty);
+      self.should(empty);
     }
     return this;
   }

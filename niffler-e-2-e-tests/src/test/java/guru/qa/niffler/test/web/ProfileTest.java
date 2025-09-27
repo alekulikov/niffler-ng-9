@@ -29,6 +29,7 @@ class ProfileTest {
         .doLogin("duck", "12345")
         .getHeader()
         .goProfilePage()
+        .checkThatPageLoaded()
         .switchArchivedCategories()
         .checkCategoryExist(categories[0].name());
   }
@@ -45,6 +46,7 @@ class ProfileTest {
         .doLogin("duck", "12345")
         .getHeader()
         .goProfilePage()
+        .checkThatPageLoaded()
         .checkCategoryExist(categories[0].name());
   }
 
@@ -55,10 +57,12 @@ class ProfileTest {
 
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .doLogin(user.username(), user.testData().password())
-        .checkMainPageBeenLoad()
+        .checkThatPageLoaded()
         .getHeader()
         .goProfilePage()
-        .setName(newName);
+        .checkThatPageLoaded()
+        .setName(newName)
+        .checkAlert("Profile successfully updated");
 
     Selenide.refresh();
     new ProfilePage().checkName(newName);

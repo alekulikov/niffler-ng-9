@@ -14,19 +14,22 @@ import java.util.Locale;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$$;
 
 @ParametersAreNonnullByDefault
-public class Calendar {
+public class Calendar extends BaseComponent {
 
   private static final DateTimeFormatter HEADER_CALENDAR_FORMAT = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH);
 
   private final SelenideElement calendarButton = $("button[aria-label*='Choose date']");
-  private final SelenideElement currentMonthAndYear = $(".MuiPickersCalendarHeader-label");
-  private final ElementsCollection selectYear = $$(".MuiPickersYear-yearButton");
-  private final SelenideElement prevMonthButton = $("button[title='Previous month']");
-  private final SelenideElement nextMonthButton = $("button[title='Next month']");
-  private final ElementsCollection days = $$(".MuiPickersSlideTransition-root button");
+  private final SelenideElement currentMonthAndYear = self.$(".MuiPickersCalendarHeader-label");
+  private final ElementsCollection selectYear = self.$$(".MuiPickersYear-yearButton");
+  private final SelenideElement prevMonthButton = self.$("button[title='Previous month']");
+  private final SelenideElement nextMonthButton = self.$("button[title='Next month']");
+  private final ElementsCollection days = self.$$(".MuiPickersSlideTransition-root button");
+
+  public Calendar() {
+    super($(".MuiPickersLayout-root"));
+  }
 
   public void selectDateInCalendar(Date date) {
     LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();

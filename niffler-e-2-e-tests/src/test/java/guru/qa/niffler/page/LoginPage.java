@@ -6,9 +6,10 @@ import org.openqa.selenium.By;
 
 import javax.annotation.Nonnull;
 
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
-public class LoginPage {
+public class LoginPage extends BasePage<LoginPage> {
 
   private final SelenideElement usernameInput = $("input[name='username']");
   private final SelenideElement passwordInput = $("input[name='password']");
@@ -29,5 +30,14 @@ public class LoginPage {
   public RegisterPage goRegisterPage() {
     registerLink.click();
     return new RegisterPage();
+  }
+
+  @Step("Check that login page been load")
+  @Nonnull
+  @Override
+  public LoginPage checkThatPageLoaded() {
+    usernameInput.shouldBe(visible);
+    passwordInput.shouldBe(visible);
+    return this;
   }
 }

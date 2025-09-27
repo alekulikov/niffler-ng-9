@@ -14,15 +14,18 @@ import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 
 @ParametersAreNonnullByDefault
-public class SpendingTable {
+public class SpendingTable extends BaseComponent {
 
-  private final SelenideElement self = $("#spendings");
   private final ElementsCollection tableRows = self.$$("tbody tr");
   private final SelenideElement deleteBtn = self.$("#delete");
   private final SelenideElement dialogWindow = $("div[role='dialog']");
   private final SelenideElement periodMenuBtn = self.$("#period");
   private final ElementsCollection periodMenuItems = $("ul[role='listbox']").$$("li");
   private final SearchField spendingSearch = new SearchField();
+
+  public SpendingTable() {
+    super($("#spendings"));
+  }
 
   public enum DataFilterValues {
     ALL,

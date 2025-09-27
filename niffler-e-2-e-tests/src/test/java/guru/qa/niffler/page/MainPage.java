@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
-public class MainPage {
+public class MainPage extends BasePage<MainPage> {
 
   private final SelenideElement statistics = $("#stat");
   @Getter
@@ -21,7 +21,8 @@ public class MainPage {
 
   @Step("Check that main page been load")
   @Nonnull
-  public MainPage checkMainPageBeenLoad() {
+  @Override
+  public MainPage checkThatPageLoaded() {
     spendingTable.checkTableBeenLoad();
     statistics.shouldBe(visible);
     return this;

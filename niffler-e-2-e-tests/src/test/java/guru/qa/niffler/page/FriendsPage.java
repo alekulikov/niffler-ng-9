@@ -89,4 +89,12 @@ public class FriendsPage extends BasePage<FriendsPage> {
     peopleSearch.search(username);
     return this;
   }
+
+  @Step("Check that friends page been load")
+  @Nonnull
+  @Override
+  public FriendsPage checkThatPageLoaded() {
+    allPeopleTab.shouldBe(visible);
+    return this;
+  }
 }

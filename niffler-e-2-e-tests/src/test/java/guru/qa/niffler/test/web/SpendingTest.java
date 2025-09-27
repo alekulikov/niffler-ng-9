@@ -65,6 +65,7 @@ class SpendingTest {
         .getHeader()
         .goAddSpendingPage()
         .addNewSpending(newSpending)
+        .checkAlert("New spending is successfully created")
         .getSpendingTable()
         .checkTableContains(newSpending.description());
   }
