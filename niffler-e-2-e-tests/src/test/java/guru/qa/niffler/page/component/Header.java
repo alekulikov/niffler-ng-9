@@ -13,13 +13,16 @@ import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
 
 @ParametersAreNonnullByDefault
-public class Header {
+public class Header extends BaseComponent {
 
-  private final SelenideElement self = $("#root header");
   private final SelenideElement mainPageLink = self.$(By.linkText("Niffler"));
   private final SelenideElement addSpendingBtn = self.$(By.linkText("New spending"));
   private final SelenideElement menuBtn = self.$("button[aria-label='Menu']");
   private final ElementsCollection menuItems = $("ul[role='menu']").$$("li");
+
+  public Header() {
+    super($("#root header"));
+  }
 
   @Step("Go to Friends page")
   @Nonnull

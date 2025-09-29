@@ -8,6 +8,7 @@ import io.qameta.allure.Step;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
 @ParametersAreNonnullByDefault
@@ -58,5 +59,13 @@ public class EditSpendingPage extends BasePage<EditSpendingPage> {
   public MainPage save() {
     submitButton.click();
     return new MainPage();
+  }
+
+  @Step("Check that edit spending page been load")
+  @Nonnull
+  @Override
+  public EditSpendingPage checkThatPageLoaded() {
+    submitButton.shouldBe(visible);
+    return this;
   }
 }

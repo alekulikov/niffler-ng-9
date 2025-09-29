@@ -10,12 +10,13 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
-public class ProfilePage {
+public class ProfilePage extends BasePage<ProfilePage> {
 
   private final SelenideElement archiveCategoriesToggle = $("input.MuiSwitch-input");
   private final ElementsCollection categories = $$(".MuiChip-label");
   private final SelenideElement nameInput = $("input[name='name']");
   private final SelenideElement saveBtn = $("button[type='submit']");
+  private final SelenideElement userName = $("#username");
 
   @Step("Switch archived categories toggle")
   @Nonnull
@@ -44,6 +45,14 @@ public class ProfilePage {
   @Nonnull
   public ProfilePage checkName(String name) {
     nameInput.shouldHave(value(name));
+    return this;
+  }
+
+  @Step("Check that profile page been load")
+  @Nonnull
+  @Override
+  public ProfilePage checkThatPageLoaded() {
+    userName.shouldBe(visible);
     return this;
   }
 }

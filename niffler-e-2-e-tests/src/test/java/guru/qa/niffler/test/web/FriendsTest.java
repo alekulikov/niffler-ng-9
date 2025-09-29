@@ -22,6 +22,7 @@ class FriendsTest {
         .doLogin(user.username(), user.testData().password())
         .getHeader()
         .goFriendsPage()
+        .checkThatPageLoaded()
         .checkThatFriendsContains(user.testData().friends()
             .stream()
             .map(UserDataJson::username)
@@ -36,6 +37,7 @@ class FriendsTest {
         .doLogin(user.username(), user.testData().password())
         .getHeader()
         .goFriendsPage()
+        .checkThatPageLoaded()
         .checkThatFriendsEmpty();
   }
 
@@ -48,6 +50,7 @@ class FriendsTest {
         .doLogin(user.username(), user.testData().password())
         .getHeader()
         .goFriendsPage()
+        .checkThatPageLoaded()
         .checkThatIncomeRequestsContains(user.testData().incomeInvitations()
             .stream()
             .map(UserDataJson::username)
@@ -64,6 +67,7 @@ class FriendsTest {
         .doLogin(user.username(), user.testData().password())
         .getHeader()
         .goAllPeoplesPage()
+        .checkThatPageLoaded()
         .checkThatOutcomeRequestsContains(user.testData().outcomeInvitations()
             .stream()
             .map(UserDataJson::username)
@@ -78,9 +82,9 @@ class FriendsTest {
 
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .doLogin(user.username(), user.testData().password())
-        .checkMainPageBeenLoad()
         .getHeader()
         .goFriendsPage()
+        .checkThatPageLoaded()
         .acceptFriendInvitationFromUser(userToAccept)
         .checkThatInvitationsEmpty()
         .checkThatFriendsContains(userToAccept);
@@ -93,9 +97,9 @@ class FriendsTest {
 
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .doLogin(user.username(), user.testData().password())
-        .checkMainPageBeenLoad()
         .getHeader()
         .goFriendsPage()
+        .checkThatPageLoaded()
         .declineFriendInvitationFromUser(userToDecline)
         .checkThatInvitationsEmpty()
         .checkThatFriendsEmpty();

@@ -13,7 +13,7 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
-public class AllPeoplePage {
+public class AllPeoplePage extends BasePage<AllPeoplePage> {
 
   private final SelenideElement friendsTab = $(By.linkText("Friends"));
   private final ElementsCollection people = $$("#all tr");
@@ -42,6 +42,14 @@ public class AllPeoplePage {
   @Nonnull
   public AllPeoplePage search(String username) {
     peopleSearch.search(username);
+    return this;
+  }
+
+  @Step("Check that all people page been load")
+  @Nonnull
+  @Override
+  public AllPeoplePage checkThatPageLoaded() {
+    friendsTab.shouldBe(visible);
     return this;
   }
 }

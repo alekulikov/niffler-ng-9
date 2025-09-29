@@ -43,6 +43,7 @@ class RegistrationTest {
 
     Selenide.open(CFG.frontUrl(), LoginPage.class)
         .goRegisterPage()
+        .checkThatPageLoaded()
         .doRegister(username, password, confirmPassword)
         .checkErrorMessageText("Passwords should be equal");
   }

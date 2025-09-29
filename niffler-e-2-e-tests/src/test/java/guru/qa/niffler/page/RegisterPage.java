@@ -6,9 +6,10 @@ import io.qameta.allure.Step;
 import javax.annotation.Nonnull;
 
 import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
-public class RegisterPage {
+public class RegisterPage extends BasePage<RegisterPage> {
 
   private final SelenideElement usernameInput = $("input[name='username']");
   private final SelenideElement passwordInput = $("input[name='password']");
@@ -38,6 +39,16 @@ public class RegisterPage {
   @Nonnull
   public RegisterPage checkErrorMessageText(String message) {
     this.errorMessage.shouldHave(text(message));
+    return this;
+  }
+
+  @Step("Check that register page been load")
+  @Nonnull
+  @Override
+  public RegisterPage checkThatPageLoaded() {
+    usernameInput.shouldBe(visible);
+    passwordInput.shouldBe(visible);
+    passwordConfirmInput.shouldBe(visible);
     return this;
   }
 }
