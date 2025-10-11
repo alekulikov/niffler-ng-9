@@ -119,7 +119,7 @@ public class SpendRepositoryHibernate implements SpendRepository {
     CategoryEntity managed = entityManager.find(CategoryEntity.class, category.getId());
     if (managed != null) {
       entityManager.joinTransaction();
-      entityManager.remove(category);
+      entityManager.remove(managed);
     }
   }
 

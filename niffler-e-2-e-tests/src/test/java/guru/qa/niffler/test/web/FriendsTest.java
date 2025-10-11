@@ -13,9 +13,7 @@ class FriendsTest {
 
   private static final Config CFG = Config.getInstance();
 
-  @User(
-      friends = 3
-  )
+  @User(friends = 3)
   @Test
   void friendShouldBePresentInFriendsTable(UserDataJson user) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
@@ -41,9 +39,7 @@ class FriendsTest {
         .checkThatFriendsEmpty();
   }
 
-  @User(
-      incomeInvitations = 2
-  )
+  @User(incomeInvitations = 2)
   @Test
   void incomeInvitationBePresentInFriendsTable(UserDataJson user) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
@@ -58,9 +54,7 @@ class FriendsTest {
         );
   }
 
-  @User(
-      outcomeInvitations = 1
-  )
+  @User(outcomeInvitations = 1)
   @Test
   void outcomeInvitationBePresentInAllPeoplesTable(UserDataJson user) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)

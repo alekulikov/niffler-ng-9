@@ -76,7 +76,7 @@ public class UserdataUserRepositoryHibernate implements UserdataUserRepository {
     UserdataUserEntity managed = entityManager.find(UserdataUserEntity.class, user.getId());
     if (managed != null) {
       entityManager.joinTransaction();
-      entityManager.remove(user);
+      entityManager.remove(managed);
     }
   }
 }

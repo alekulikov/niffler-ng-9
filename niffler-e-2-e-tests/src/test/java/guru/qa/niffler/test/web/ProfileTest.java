@@ -5,7 +5,6 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
-import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.UserDataJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.ProfilePage;
@@ -18,36 +17,34 @@ class ProfileTest {
   private static final Config CFG = Config.getInstance();
 
   @User(
-      username = "duck",
       categories = @Category(
           archived = true
       )
   )
   @Test
-  void archivedCategoryShouldPresentInCategoriesList(CategoryJson... categories) {
+  void archivedCategoryShouldPresentInCategoriesList(UserDataJson user) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .doLogin("duck", "12345")
+        .doLogin(user.username(), user.testData().password())
         .getHeader()
         .goProfilePage()
         .checkThatPageLoaded()
         .switchArchivedCategories()
-        .checkCategoryExist(categories[0].name());
+        .checkCategoryExist(user.testData().categories().getFirst().name());
   }
 
   @User(
-      username = "duck",
       categories = @Category(
           archived = false
       )
   )
   @Test
-  void activeCategoryShouldPresentInCategoriesList(CategoryJson... categories) {
+  void activeCategoryShouldPresentInCategoriesList(UserDataJson user) {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .doLogin("duck", "12345")
+        .doLogin(user.username(), user.testData().password())
         .getHeader()
         .goProfilePage()
         .checkThatPageLoaded()
-        .checkCategoryExist(categories[0].name());
+        .checkCategoryExist(user.testData().categories().getFirst().name());
   }
 
   @User

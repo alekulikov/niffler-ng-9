@@ -9,15 +9,12 @@ import guru.qa.niffler.model.UserDataJson;
 import guru.qa.niffler.service.UsersClient;
 import io.qameta.allure.Step;
 import org.apache.commons.lang3.time.StopWatch;
-import org.openqa.selenium.RetrySessionRequestException;
 import retrofit2.Call;
 import retrofit2.Response;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
-import java.lang.module.ResolutionException;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static guru.qa.niffler.utils.RandomDataUtils.randomUsername;
@@ -58,55 +55,55 @@ public class UsersApiClient implements UsersClient {
       }
     }
     throw new RuntimeException("User with name " + username + " not created");
-}
+  }
 
-@Override
-@Step("Create {count} income invitations using REST API")
-public void createIncomeInvitations(UserDataJson targetUser, int count) {
-  if (count > 0) {
-    for (int i = 0; i < count; i++) {
-      UserDataJson requester = createUser(randomUsername(), "12345");
-      execute(userdataApi.sendInvitation(requester.username(), targetUser.username()));
-      targetUser.testData().incomeInvitations().add(requester);
+  @Override
+  @Step("Create {count} income invitations using REST API")
+  public void createIncomeInvitations(UserDataJson targetUser, int count) {
+    if (count > 0) {
+      for (int i = 0; i < count; i++) {
+        UserDataJson requester = createUser(randomUsername(), "12345");
+        execute(userdataApi.sendInvitation(requester.username(), targetUser.username()));
+        targetUser.testData().incomeInvitations().add(requester);
+      }
     }
   }
-}
 
-@Override
-@Step("Create {count} outcome invitations using REST API")
-public void createOutcomeInvitations(UserDataJson targetUser, int count) {
-  if (count > 0) {
-    for (int i = 0; i < count; i++) {
-      UserDataJson addressee = createUser(randomUsername(), "12345");
-      execute(userdataApi.sendInvitation(targetUser.username(), addressee.username()));
-      targetUser.testData().outcomeInvitations().add(addressee);
+  @Override
+  @Step("Create {count} outcome invitations using REST API")
+  public void createOutcomeInvitations(UserDataJson targetUser, int count) {
+    if (count > 0) {
+      for (int i = 0; i < count; i++) {
+        UserDataJson addressee = createUser(randomUsername(), "12345");
+        execute(userdataApi.sendInvitation(targetUser.username(), addressee.username()));
+        targetUser.testData().outcomeInvitations().add(addressee);
+      }
     }
   }
-}
 
-@Override
-@Step("Create {count} friends using REST API")
-public void createFriends(UserDataJson targetUser, int count) {
-  if (count > 0) {
-    for (int i = 0; i < count; i++) {
-      UserDataJson userFriend = createUser(randomUsername(), "12345");
-      execute(userdataApi.sendInvitation(userFriend.username(), targetUser.username()));
-      execute(userdataApi.acceptInvitation(targetUser.username(), userFriend.username()));
-      targetUser.testData().friends().add(userFriend);
+  @Override
+  @Step("Create {count} friends using REST API")
+  public void createFriends(UserDataJson targetUser, int count) {
+    if (count > 0) {
+      for (int i = 0; i < count; i++) {
+        UserDataJson userFriend = createUser(randomUsername(), "12345");
+        execute(userdataApi.sendInvitation(userFriend.username(), targetUser.username()));
+        execute(userdataApi.acceptInvitation(targetUser.username(), userFriend.username()));
+        targetUser.testData().friends().add(userFriend);
+      }
     }
   }
-}
 
-@Nonnull
-protected <T> Response<T> execute(Call<T> request) {
-  Response<T> response;
-  try {
-    response = request.execute();
-  } catch (IOException e) {
-    throw new AssertionError(e);
+  @Nonnull
+  protected <T> Response<T> execute(Call<T> request) {
+    Response<T> response;
+    try {
+      response = request.execute();
+    } catch (IOException e) {
+      throw new AssertionError(e);
+    }
+    assertTrue(response.isSuccessful());
+    return response;
   }
-  assertTrue(response.isSuccessful());
-  return response;
-}
 
 }

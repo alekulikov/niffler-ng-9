@@ -1,15 +1,14 @@
 package guru.qa.niffler.jupiter.extension;
 
-import guru.qa.niffler.api.GhApiClient;
 import guru.qa.niffler.jupiter.annotation.DisabledByIssue;
+import guru.qa.niffler.service.impl.GhApiClient;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.support.AnnotationSupport;
+import org.junit.platform.commons.support.SearchOption;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
 
 public class IssueExtension implements ExecutionCondition {
@@ -24,7 +23,7 @@ public class IssueExtension implements ExecutionCondition {
     annotation = AnnotationSupport.findAnnotation(
         context.getRequiredTestClass(),
         DisabledByIssue.class,
-        getEnclosingClasses(context.getRequiredTestClass())
+        SearchOption.INCLUDE_ENCLOSING_CLASSES
     );
 
     if (context.getTestMethod().isPresent() && annotation.isEmpty()) {
@@ -41,17 +40,5 @@ public class IssueExtension implements ExecutionCondition {
     ).orElseGet(
         () -> ConditionEvaluationResult.enabled("Annotation @DisabledByIssue not found")
     );
-  }
-
-  private List<Class<?>> getEnclosingClasses(Class<?> testClass) {
-    List<Class<?>> enclosingClasses = new LinkedList<>();
-    Class<?> enclosingClass = testClass.getEnclosingClass();
-
-    while (enclosingClass != null) {
-      enclosingClasses.addFirst(enclosingClass);
-      enclosingClass = enclosingClass.getEnclosingClass();
-    }
-
-    return enclosingClasses;
   }
 }

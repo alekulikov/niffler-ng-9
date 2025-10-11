@@ -21,7 +21,6 @@ class SpendingTest {
   private static final Config CFG = Config.getInstance();
 
   @User(
-      username = "duck",
       spendings = @Spending(
           category = "Обучение",
           description = "Обучение Niffler 2.0",
@@ -30,13 +29,13 @@ class SpendingTest {
       )
   )
   @Test
-  void spendingDescriptionMayBeUpdatedByTableAction(SpendJson... spendings) {
+  void spendingDescriptionMayBeUpdatedByTableAction(UserDataJson user) {
     final String newDescription = ":)";
 
     Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .doLogin("duck", "12345")
+        .doLogin(user.username(), user.testData().password())
         .getSpendingTable()
-        .editSpending(spendings[0].description())
+        .editSpending(user.testData().spendings().getFirst().description())
         .setSpendingDescription(newDescription)
         .save()
         .getSpendingTable()
