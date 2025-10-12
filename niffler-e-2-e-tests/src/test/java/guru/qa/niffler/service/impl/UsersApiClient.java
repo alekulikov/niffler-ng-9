@@ -13,8 +13,11 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static guru.qa.niffler.utils.RandomDataUtils.randomUsername;
@@ -92,6 +95,13 @@ public class UsersApiClient implements UsersClient {
         targetUser.testData().friends().add(userFriend);
       }
     }
+  }
+
+  @Step("Get all users using REST API")
+  @Nonnull
+  public List<UserDataJson> allUsers(String username, @Nullable String searchQuery) {
+    List<UserDataJson> users = execute(userdataApi.allUsers(username, searchQuery)).body();
+    return users != null ? users : Collections.emptyList();
   }
 
   @Nonnull
