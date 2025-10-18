@@ -19,4 +19,3 @@ class UsersAfterAllApiTest {
     Assertions.assertFalse(allUsers.isEmpty());
   }
 }
-
