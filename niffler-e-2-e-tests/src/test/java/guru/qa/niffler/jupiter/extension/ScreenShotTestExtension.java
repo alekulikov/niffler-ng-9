@@ -4,18 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.model.allure.ScreenDif;
 import io.qameta.allure.Allure;
-import lombok.SneakyThrows;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ParameterContext;
-import org.junit.jupiter.api.extension.ParameterResolutionException;
-import org.junit.jupiter.api.extension.ParameterResolver;
-import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
+import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 import org.springframework.core.io.ClassPathResource;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
 
@@ -32,10 +28,16 @@ public class ScreenShotTestExtension implements ParameterResolver, TestExecution
         parameterContext.getParameter().getType().isAssignableFrom(BufferedImage.class);
   }
 
-  @SneakyThrows
   @Override
   public BufferedImage resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-    return ImageIO.read(new ClassPathResource("img/expected-stat.png").getInputStream());
+    try {
+      return ImageIO.read(new ClassPathResource(extensionContext.getRequiredTestMethod()
+          .getAnnotation(ScreenShotTest.class).value())
+          .getInputStream()
+      );
+    } catch (IOException e) {
+      throw new ParameterResolutionException(e.getMessage(), e);
+    }
   }
 
   @Override
@@ -51,6 +53,12 @@ public class ScreenShotTestExtension implements ParameterResolver, TestExecution
         "application/vnd.allure.image.diff",
         objectMapper.writeValueAsString(screenDif)
     );
+
+    ScreenShotTest anno = context.getRequiredTestMethod().getAnnotation(ScreenShotTest.class);
+    if (anno.rewriteExpected() && getActual() != null) {
+      ImageIO.write(getActual(), "png",
+          new File(String.format("src/test/resources/%s", anno.value())));
+    }
     throw throwable;
   }
 

@@ -19,7 +19,7 @@ public interface SuiteExtension extends BeforeAllCallback {
             this.getClass(),
             key -> {
               beforeSuite(rootContext);
-              return new AutoCloseable() {
+              return new ExtensionContext.Store.CloseableResource() {
                 @Override
                 public void close() {
                   afterSuite();

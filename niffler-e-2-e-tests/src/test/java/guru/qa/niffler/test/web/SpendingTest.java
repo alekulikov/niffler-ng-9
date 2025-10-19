@@ -11,17 +11,14 @@ import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.model.UserDataJson;
 import guru.qa.niffler.page.LoginPage;
+import guru.qa.niffler.page.MainPage;
 import guru.qa.niffler.utils.RandomDataUtils;
-import guru.qa.niffler.utils.ScreenDiffResult;
 import org.junit.jupiter.api.Test;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Date;
-
-import static com.codeborne.selenide.Selenide.$;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import java.util.List;
 
 @WebTest
 class SpendingTest {
@@ -80,20 +77,72 @@ class SpendingTest {
   @User(
       spendings = @Spending(
           category = "Обучение",
-          description = "Обучение Advanced 2.0",
-          amount = 79990,
+          description = "Обучение Niffler 2.0",
+          amount = 89000.00,
           currency = CurrencyValues.RUB
       )
   )
-  @ScreenShotTest("img/expected-stat.png")
+  @ScreenShotTest(value = "img/expected-stat-edit.png", rewriteExpected = true)
+  void checkStatComponentAfterEditingTest(UserDataJson user, BufferedImage expected) throws IOException {
+    Selenide.open(CFG.frontUrl(), LoginPage.class)
+        .doLogin(user.username(), user.testData().password())
+        .getSpendingTable()
+        .editSpending(user.testData().spendings().getFirst().description())
+        .setAmount(82500.99).save()
+        .checkStatisticDiagram(expected)
+        .checkStatisticLegend(List.of("Обучение 82500.99 ₽"));
+  }
+
+  @User(
+      spendings = @Spending(
+          category = "Обучение",
+          description = "Обучение Advanced 2.0",
+          amount = 79990.19,
+          currency = CurrencyValues.RUB
+      )
+  )
+  @ScreenShotTest(value = "img/expected-stat.png", rewriteExpected = true)
   void checkStatComponentTest(UserDataJson user, BufferedImage expected) throws IOException {
     Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .doLogin(user.username(), user.testData().password());
+        .doLogin(user.username(), user.testData().password())
+        .checkStatisticDiagram(expected)
+        .checkStatisticLegend(List.of("Обучение 79990.19 ₽"));
+  }
 
-    BufferedImage actual = ImageIO.read($("canvas[role='img']").screenshot());
-    assertFalse(new ScreenDiffResult(
-        expected,
-        actual
-    ));
+  @User(
+      spendings = @Spending(
+          category = "Обучение",
+          description = "Обучение Niffler 2.0",
+          amount = 89000.00,
+          currency = CurrencyValues.RUB
+      )
+  )
+  @ScreenShotTest(value = "img/expected-stat-delete.png", rewriteExpected = true)
+  void checkStatComponentAfterDeletingSpendTest(UserDataJson user, BufferedImage expected) throws IOException {
+    Selenide.open(CFG.frontUrl(), LoginPage.class)
+        .doLogin(user.username(), user.testData().password())
+        .getSpendingTable()
+        .deleteSpending(user.testData().spendings().getFirst().description());
+        new MainPage().checkStatisticDiagram(expected);
+  }
+
+  @User(
+      categories = @Category(
+          name = "Еда",
+          archived = true
+      ),
+      spendings = @Spending(
+          category = "Еда",
+          description = "Кофе",
+          amount = 200.00,
+          currency = CurrencyValues.RUB
+      )
+  )
+  @ScreenShotTest(value = "img/expected-stat-archived.png", rewriteExpected = true)
+  void checkStatComponentWithArchiveCategoryTest(UserDataJson user, BufferedImage expected) throws IOException {
+    Selenide.open(CFG.frontUrl(), LoginPage.class)
+        .doLogin(user.username(), user.testData().password())
+        .checkStatisticDiagram(expected)
+        .checkStatisticLegend(List.of("Archived 200 ₽"));
   }
 }
