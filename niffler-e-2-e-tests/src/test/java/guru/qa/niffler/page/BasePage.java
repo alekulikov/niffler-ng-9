@@ -17,7 +17,7 @@ public abstract class BasePage<T extends BasePage<?>> {
 
   public abstract T checkThatPageLoaded();
 
-  @Step("Check that alert message have text: '{expectedText}'")
+  @Step("Check that alert message have text: '{text}'")
   @SuppressWarnings("unchecked")
   @Nonnull
   public T checkAlert(String text) {

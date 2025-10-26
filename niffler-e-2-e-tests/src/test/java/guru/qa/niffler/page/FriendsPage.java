@@ -25,7 +25,7 @@ public class FriendsPage extends BasePage<FriendsPage> {
   private final SelenideElement dialogWindow = $("div[role='dialog']");
   private final SearchField peopleSearch = new SearchField();
 
-  @Step("Accept invitation from {username}")
+  @Step("Accept invitation from '{username}'")
   @Nonnull
   public FriendsPage acceptFriendInvitationFromUser(String username) {
     incomeRequests.find(text(username))
@@ -33,7 +33,7 @@ public class FriendsPage extends BasePage<FriendsPage> {
     return this;
   }
 
-  @Step("Decline invitation from {username}")
+  @Step("Decline invitation from '{username}'")
   @Nonnull
   public FriendsPage declineFriendInvitationFromUser(String username) {
     incomeRequests.find(text(username))

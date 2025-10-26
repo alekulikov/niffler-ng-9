@@ -32,6 +32,12 @@ public record UserDataJson(
     @JsonIgnore
     TestData testData) {
 
+  public UserDataJson {
+    if (testData == null) {
+      testData = new TestData(null);
+    }
+  }
+
   @Nonnull
   public static UserDataJson fromEntity(@Nonnull UserdataUserEntity entity, @Nullable FriendshipStatus friendshipStatus) {
     return new UserDataJson(

@@ -49,7 +49,7 @@ public class UsersApiClient implements UsersClient {
     while (sw.getTime(TimeUnit.MILLISECONDS) < MAX_WAIT_TIME) {
       UserDataJson userJson = execute(userdataApi.currentUser(username)).body();
       if (userJson != null && userJson.id() != null) {
-        return userJson.withPassword(password);
+        return userJson;
       }
       try {
         Thread.sleep(500L);
