@@ -27,6 +27,10 @@ public class SpendRepositoryHibernate implements SpendRepository {
     findCategoryByUsernameAndCategoryName(spend.getCategory().getUsername(), spend.getCategory().getName())
         .ifPresent(spend::setCategory);
     entityManager.joinTransaction();
+    if (spend.getCategory().getId() != null) {
+      CategoryEntity categoryRef = entityManager.getReference(CategoryEntity.class, spend.getCategory().getId());
+      spend.setCategory(categoryRef);
+    }
     entityManager.persist(spend);
     return spend;
   }
