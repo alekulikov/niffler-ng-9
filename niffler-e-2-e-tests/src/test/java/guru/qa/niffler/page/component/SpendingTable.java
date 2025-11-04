@@ -2,6 +2,7 @@ package guru.qa.niffler.page.component;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.EditSpendingPage;
 import io.qameta.allure.Step;
 
@@ -12,11 +13,12 @@ import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
+import static guru.qa.niffler.condition.SpendConditions.spends;
 
 @ParametersAreNonnullByDefault
 public class SpendingTable extends BaseComponent {
 
-  private final ElementsCollection tableRows = self.$$("tbody tr");
+  private final ElementsCollection spends = self.$$("tbody tr");
   private final SelenideElement deleteBtn = self.$("#delete");
   private final SelenideElement dialogWindow = $("div[role='dialog']");
   private final SelenideElement periodMenuBtn = self.$("#period");
@@ -46,7 +48,7 @@ public class SpendingTable extends BaseComponent {
   @Nonnull
   public EditSpendingPage editSpending(String description) {
     searchSpendingByDescription(description);
-    SelenideElement row = tableRows.find(text(description));
+    SelenideElement row = spends.find(text(description));
     row.$$("td").get(5).click();
     return new EditSpendingPage();
   }
@@ -55,7 +57,7 @@ public class SpendingTable extends BaseComponent {
   @Nonnull
   public SpendingTable deleteSpending(String description) {
     searchSpendingByDescription(description);
-    tableRows.find(text(description))
+    spends.find(text(description))
         .$$("td")
         .get(0)
         .click();
@@ -75,13 +77,13 @@ public class SpendingTable extends BaseComponent {
   @Nonnull
   public SpendingTable checkTableContains(String expectedSpend) {
     searchSpendingByDescription(expectedSpend);
-    tableRows.find(text(expectedSpend)).shouldBe(visible);
+    spends.find(text(expectedSpend)).shouldBe(visible);
     return this;
   }
 
   @Step("Check spending table size")
   public SpendingTable checkTableSize(int expectedSize) {
-    tableRows.shouldHave(size(expectedSize));
+    spends.shouldHave(size(expectedSize));
     return this;
   }
 
@@ -89,6 +91,11 @@ public class SpendingTable extends BaseComponent {
   @Nonnull
   public SpendingTable checkTableBeenLoad() {
     self.shouldBe(visible);
+    return this;
+  }
+
+  public SpendingTable checkSpendTable(SpendJson... expectedSpends) {
+    spends.shouldHave(spends(expectedSpends));
     return this;
   }
 }
